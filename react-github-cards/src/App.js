@@ -5,7 +5,8 @@ import Card from "./components/Card";
 
 class App extends React.Component {
   state = {
-    user: []
+    user: [],
+    followers: []
   };
 
   componentDidMount() {
@@ -15,6 +16,15 @@ class App extends React.Component {
       .catch(err => console.log("HOLD ON: ", err));
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState !== this.state.user) {
+      axios
+        .get("https://api.github.com/users/spencer-mcguire/followers")
+        .then(res => this.setState({ followers: res.data }))
+        .catch(err => console.log("HOLD ON: ", err));
+    }
+  }
+
   render() {
     return (
       <div className="App">
@@ -22,7 +32,7 @@ class App extends React.Component {
           <h1> Github Users Project</h1>
         </header>
         <section className="container">
-          <Card i={this.state.user} />
+          <Card i={this.state.user} followers={this.state.followers} />
         </section>
       </div>
     );
